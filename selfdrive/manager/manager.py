@@ -39,10 +39,10 @@ def manager_init() -> None:
   params.clear_all(ParamKeyType.CLEAR_ON_OFFROAD_TRANSITION)
 
   default_params: List[Tuple[str, Union[str, bytes]]] = [
-    ("CompletedTrainingVersion", "0"),
+    ("CompletedTrainingVersion", "0.2.0"),
     ("DisengageOnAccelerator", "0"),
     ("GsmMetered", "1"),
-    ("HasAcceptedTerms", "0"),
+    ("HasAcceptedTerms", "2"),
     ("LanguageSetting", "main_en"),
     ("OpenpilotEnabledToggle", "1"),
     ("LongitudinalPersonality", str(log.LongitudinalPersonality.standard)),
@@ -50,7 +50,7 @@ def manager_init() -> None:
     ("dp_no_gps_ctrl", "0"),
     ("dp_no_fan_ctrl", "0"),
     ("dp_logging", "0"),
-    ("dp_alka", "0"),
+    ("dp_alka", "1"),
     ("dp_mapd", "0"),
     ("dp_lat_lane_priority_mode", "0"),
     ("dp_0813", "0"),
@@ -163,11 +163,10 @@ def manager_thread() -> None:
     ignore += ["manage_athenad", "uploader"]
   if os.getenv("NOBOARD") is not None:
     ignore.append("pandad")
-
   if not params.get_bool("dp_logging"):
     ignore += ["logcatd", "proclogd", "loggerd"]
   ignore += [x for x in os.getenv("BLOCK", "").split(",") if len(x) > 0]
-
+  ignore += ['dmonitoringmodeld', 'dmonitoringd', 'dpmonitoringd']
   if not params.get_bool("dp_mapd"):
     ignore += ["mapd", "gpxd"]
 

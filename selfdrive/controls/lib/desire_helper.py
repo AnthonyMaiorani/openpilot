@@ -5,7 +5,7 @@ from openpilot.common.realtime import DT_MDL
 LaneChangeState = log.LateralPlan.LaneChangeState
 LaneChangeDirection = log.LateralPlan.LaneChangeDirection
 
-LANE_CHANGE_SPEED_MIN = 20 * CV.MPH_TO_MS
+LANE_CHANGE_SPEED_MIN = 29 * CV.MPH_TO_MS
 LANE_CHANGE_TIME_MAX = 10.
 
 DESIRES = {
@@ -70,7 +70,7 @@ class DesireHelper:
         if not one_blinker or below_lane_change_speed:
           self.lane_change_state = LaneChangeState.off
           self.lane_change_direction = LaneChangeDirection.none
-        elif torque_applied and not blindspot_detected:
+        elif not blindspot_detected:
           self.lane_change_state = LaneChangeState.laneChangeStarting
 
       # LaneChangeState.laneChangeStarting

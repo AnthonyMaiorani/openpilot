@@ -39,7 +39,7 @@ TESTING_CLOSET = "TESTING_CLOSET" in os.environ
 NOSENSOR = "NOSENSOR" in os.environ
 IGNORE_PROCESSES = {"loggerd", "encoderd", "statsd", "mapd", "gpxd"}
 
-NO_IR_CTRL = Params().get_bool("dp_device_no_ir_ctrl")
+NO_IR_CTRL = True
 if NO_IR_CTRL:
   IGNORE_PROCESSES |= {'driverCameraState', 'driverMonitoringState'}
 
@@ -286,9 +286,6 @@ class Controls:
       (CS.regenBraking and (not self.CS_prev.regenBraking or not CS.standstill)):
       self.events.add(EventName.pedalPressed)
 
-    if CS.brakePressed and CS.standstill:
-      self.events.add(EventName.preEnableStandstill)
-
     if CS.gasPressed:
       self.events.add(EventName.gasPressedOverride)
 
@@ -359,9 +356,6 @@ class Controls:
       else:
         safety_mismatch = pandaState.safetyModel not in IGNORED_SAFETY_MODES
 
-      if safety_mismatch or pandaState.safetyRxChecksInvalid or self.mismatch_counter >= 200:
-        self.events.add(EventName.controlsMismatch)
-
       if log.PandaState.FaultType.relayMalfunction in pandaState.faults:
         self.events.add(EventName.relayMalfunction)
 
@@ -428,13 +422,6 @@ class Controls:
       self.events.add(EventName.posenetInvalid)
     if not self.sm['liveLocationKalman'].deviceStable:
       self.events.add(EventName.deviceFalling)
-
-    if not REPLAY:
-      # Check for mismatch between openpilot and car's PCM
-      cruise_mismatch = CS.cruiseState.enabled and (not self.enabled or not self.CP.pcmCruise)
-      self.cruise_mismatch_counter = self.cruise_mismatch_counter + 1 if cruise_mismatch else 0
-      if self.cruise_mismatch_counter > int(6. / DT_CTRL):
-        self.events.add(EventName.cruiseMismatch)
 
     # Check for FCW
     stock_long_is_braking = self.enabled and not self.CP.openpilotLongitudinalControl and CS.aEgo < -1.25
