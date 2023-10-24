@@ -195,7 +195,7 @@ class NormalPermanentAlert(Alert):
 
 
 class StartupAlert(Alert):
-  def __init__(self, alert_text_1: str, alert_text_2: str = _("Happy Holiday / New Years! Safe Travel, cya in 2023"), alert_status=AlertStatus.normal):
+  def __init__(self, alert_text_1: str, alert_text_2: str = _("Always keep eyes on road"), alert_status=AlertStatus.normal):
     super().__init__(alert_text_1, alert_text_2,
                      alert_status, AlertSize.mid,
                      Priority.LOWER, VisualAlert.none, AudibleAlert.none, 10.),
@@ -745,13 +745,13 @@ EVENTS: Dict[int, Dict[str, Union[Alert, AlertCallbackType]]] = {
   },
 
   EventName.doorOpen: {
-    ET.SOFT_DISABLE: user_soft_disable_alert(_("Door Open")),
-    ET.NO_ENTRY: NoEntryAlert(_("Door Open")),
+    #ET.SOFT_DISABLE: user_soft_disable_alert(_("Door Open")),
+    #ET.NO_ENTRY: NoEntryAlert(_("Door Open")),
   },
 
   EventName.seatbeltNotLatched: {
-    ET.SOFT_DISABLE: user_soft_disable_alert(_("Seatbelt Unlatched")),
-    ET.NO_ENTRY: NoEntryAlert(_("Seatbelt Unlatched")),
+    #ET.SOFT_DISABLE: user_soft_disable_alert(_("Seatbelt Unlatched")),
+    #ET.NO_ENTRY: NoEntryAlert(_("Seatbelt Unlatched")),
   },
 
   EventName.espDisabled: {
@@ -943,11 +943,11 @@ EVENTS: Dict[int, Dict[str, Union[Alert, AlertCallbackType]]] = {
   },
 
   EventName.speedTooLow: {
-    ET.IMMEDIATE_DISABLE: Alert(
-      _("openpilot Canceled"),
-      _("Speed too low"),
-      AlertStatus.normal, AlertSize.mid,
-      Priority.HIGH, VisualAlert.none, AudibleAlert.disengage, 3.),
+    ET.USER_DISABLE: Alert( 
+      _("openpilot Disengaged"),
+      "",
+      AlertStatus.normal, AlertSize.small,
+      Priority.LOWEST, VisualAlert.none, AudibleAlert.none, 3.),
   },
 
   # When the car is driving faster than most cars in the training data, the model outputs can be unpredictable.

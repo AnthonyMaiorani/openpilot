@@ -24,7 +24,7 @@ confs = [
   {'name': 'dp_jetson', 'default': False, 'type': 'Bool', 'conf_type': ['param']},
 
   # nav service
-  {'name': 'dp_nav', 'default': True, 'type': 'Bool', 'conf_type': ['param']},
+  {'name': 'dp_nav', 'default': False, 'type': 'Bool', 'conf_type': ['param']},
   {'name': 'dp_otisserv', 'default': False, 'type': 'Bool', 'conf_type': ['param']},
   {'name': 'dp_nav_mapbox_token_pk', 'default': '', 'type': 'Text', 'conf_type': ['param']},
   {'name': 'dp_nav_mapbox_token_sk', 'default': '', 'type': 'Text', 'conf_type': ['param']},
@@ -42,7 +42,7 @@ confs = [
 
   # assign car via param
   # echo -n TOYOTA C-HR 2021 > /data/params/d/dp_car_assigned
-  {'name': 'dp_car_assigned', 'default': '', 'type': 'Text', 'conf_type': ['param']},
+  {'name': 'dp_car_assigned', 'default': 'HONDA ACCORD 2018', 'type': 'Text', 'conf_type': ['param']},
   {'name': 'dp_car_list', 'default': '', 'type': 'Text', 'conf_type': ['param']},
 
   {'name': 'dp_last_modified', 'default': str(floor(time.time())), 'type': 'Text', 'conf_type': ['param']},
@@ -50,28 +50,28 @@ confs = [
   # lateral - alc
   {'name': 'dp_lateral_mode', 'default': 1, 'type': 'UInt8', 'min': 0, 'max': 2, 'conf_type': ['param', 'struct']},
   # {'name': 'dp_signal_off_delay', 'default': 3., 'type': 'Float32', 'min': 0., 'max': 10., 'depends': [{'name': 'dp_lateral_mode', 'vals': [0]}], 'conf_type': ['param', 'struct']},
-  {'name': 'dp_lc_min_mph', 'default': 15, 'type': 'UInt8', 'min': 0, 'max': 255, 'depends': [{'name': 'dp_lateral_mode', 'vals': [1, 2]}], 'conf_type': ['param', 'struct']},
-  {'name': 'dp_lc_auto_min_mph', 'default': 40, 'type': 'UInt8', 'min': 0, 'max': 255, 'depends': [{'name': 'dp_lateral_mode', 'vals': [2]}], 'conf_type': ['param', 'struct']},
-  {'name': 'dp_lc_auto_delay', 'default': 3., 'type': 'Float32', 'min': 0., 'max': 10., 'depends': [{'name': 'dp_lateral_mode', 'vals': [2]}], 'conf_type': ['param', 'struct']},
+  {'name': 'dp_lc_min_mph', 'default': 30, 'type': 'UInt8', 'min': 0, 'max': 255, 'depends': [{'name': 'dp_lateral_mode', 'vals': [1, 2]}], 'conf_type': ['param', 'struct']},
+  {'name': 'dp_lc_auto_min_mph', 'default': 30, 'type': 'UInt8', 'min': 0, 'max': 255, 'depends': [{'name': 'dp_lateral_mode', 'vals': [2]}], 'conf_type': ['param', 'struct']},
+  {'name': 'dp_lc_auto_delay', 'default': 0.1, 'type': 'Float32', 'min': 0., 'max': 10., 'depends': [{'name': 'dp_lateral_mode', 'vals': [2]}], 'conf_type': ['param', 'struct']},
   {'name': 'dp_lateral_lanelines', 'default': False, 'type': 'Bool', 'conf_type': ['param', 'struct']},
   {'name': 'dp_lateral_camera_offset', 'default': 4 if TICI else -6, 'type': 'Int8', 'min': -100, 'max': 100, 'depends': [{'name': 'dp_lateral_lanelines', 'vals': [True]}], 'conf_type': ['param', 'struct']},
   {'name': 'dp_lateral_path_offset', 'default': 4 if TICI else 0, 'type': 'Int8', 'min': -100, 'max': 100, 'depends': [{'name': 'dp_lateral_lanelines', 'vals': [True]}], 'conf_type': ['param', 'struct']},
 
   #ui
   {'name': 'dp_ip_addr', 'default': '', 'type': 'Text', 'conf_type': ['struct']},
-  {'name': 'dp_quiet_drive', 'default': False, 'type': 'Bool', 'conf_type': ['param']},
+  {'name': 'dp_quiet_drive', 'default': True, 'type': 'Bool', 'conf_type': ['param']},
   {'name': 'dp_ui_top', 'default': False, 'type': 'Bool', 'conf_type': ['param', 'struct']},
   {'name': 'dp_ui_side', 'default': False, 'type': 'Bool', 'conf_type': ['param', 'struct']},
   {'name': 'dp_ui_volume', 'default': -5, 'type': 'Int8', 'min': -5, 'max': 100, 'conf_type': ['param', 'struct']},
   {'name': 'dp_ui_brightness', 'default': 0, 'type': 'UInt8', 'min': 0, 'max': 100, 'conf_type': ['param', 'struct']},
   {'name': 'dp_ui_display_mode', 'default': 0, 'type': 'UInt8', 'min': 0, 'max': 1, 'conf_type': ['param', 'struct']},
   {'name': 'dp_ui_speed', 'default': True, 'type': 'Bool', 'conf_type': ['param', 'struct']},
-  {'name': 'dp_ui_event', 'default': True, 'type': 'Bool', 'conf_type': ['param', 'struct']},
-  {'name': 'dp_ui_face', 'default': True, 'type': 'Bool', 'conf_type': ['param', 'struct']},
+  {'name': 'dp_ui_event', 'default': False, 'type': 'Bool', 'conf_type': ['param', 'struct']},
+  {'name': 'dp_ui_face', 'default': False, 'type': 'Bool', 'conf_type': ['param', 'struct']},
   {'name': 'dp_ui_lead_info', 'default': True, 'type': 'Bool', 'conf_type': ['param', 'struct']},
   {'name': 'dp_ui_laneline', 'default': True, 'type': 'Bool', 'conf_type': ['param', 'struct']},
   {'name': 'dp_ui_chevron', 'default': True, 'type': 'Bool', 'conf_type': ['param', 'struct']},
-  {'name': 'dp_ui_dm_cam', 'default': True, 'type': 'Bool', 'conf_type': ['param', 'struct']},
+  {'name': 'dp_ui_dm_cam', 'default': False, 'type': 'Bool', 'conf_type': ['param', 'struct']},
 
   #toyota
   {'name': 'dp_toyota_sng', 'default': False, 'type': 'Bool', 'conf_type': ['param', 'struct']},
@@ -105,8 +105,8 @@ confs = [
   {'name': 'dp_hotspot_on_boot', 'default': False, 'type': 'Bool', 'conf_type': ['param']},
   {'name': 'dp_honda_eps_mod', 'default': False, 'type': 'Bool', 'conf_type': ['param']},
   {'name': 'dp_dm', 'default': False, 'type': 'Bool', 'conf_type': ['param']},
-  {'name': 'dp_speed_check', 'default': True, 'type': 'Bool', 'conf_type': ['param', 'struct']},
-  {'name': 'dp_temp_check', 'default': True, 'type': 'Bool', 'conf_type': ['param']},
+  {'name': 'dp_speed_check', 'default': False, 'type': 'Bool', 'conf_type': ['param', 'struct']},
+  {'name': 'dp_temp_check', 'default': False, 'type': 'Bool', 'conf_type': ['param']},
   {'name': 'dp_vag_resume_fix', 'default': False, 'type': 'Bool', 'conf_type': ['param']},
   # # lat ctrl
   # {'name': 'dp_lane_less_mode_ctrl', 'default': False, 'type': 'Bool', 'conf_type': ['param', 'struct']},
