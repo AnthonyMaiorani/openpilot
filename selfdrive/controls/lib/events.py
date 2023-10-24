@@ -921,7 +921,7 @@ EVENTS: Dict[int, Dict[str, Union[Alert, AlertCallbackType]]] = {
   # On cars that use stock ACC the car can decide to cancel ACC for various reasons.
   # When this happens we can no long control the car so the user needs to be warned immediately.
   EventName.cruiseDisabled: {
-    ET.IMMEDIATE_DISABLE: ImmediateDisableAlert(_("Cruise Is Off")),
+    #ET.IMMEDIATE_DISABLE: ImmediateDisableAlert(_("Cruise Is Off")),
   },
 
   # For planning the trajectory Model Predictive Control (MPC) is used. This is
@@ -943,11 +943,11 @@ EVENTS: Dict[int, Dict[str, Union[Alert, AlertCallbackType]]] = {
   },
 
   EventName.speedTooLow: {
-    ET.USER_DISABLE: Alert( 
-      _("openpilot Disengaged"),
+    ET.USER_DISABLE: Alert(
       "",
-      AlertStatus.normal, AlertSize.small,
-      Priority.LOWEST, VisualAlert.none, AudibleAlert.none, 3.),
+      "",
+      AlertStatus.normal, AlertSize.none,
+      Priority.LOWEST, VisualAlert.none, AudibleAlert.none, .1),
   },
 
   # When the car is driving faster than most cars in the training data, the model outputs can be unpredictable.
