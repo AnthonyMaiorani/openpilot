@@ -15,7 +15,7 @@ from system.hardware import TICI
 '''
 confs = [
   # custom api server
-  {'name': 'dp_api_custom', 'default': False, 'type': 'Bool', 'conf_type': ['param']},
+  {'name': 'dp_api_custom', 'default': True, 'type': 'Bool', 'conf_type': ['param']},
   {'name': 'dp_api_custom_url', 'default': 'https://api.retropilot.org', 'type': 'Text', 'depends': [{'name': 'dp_api_custom', 'vals': [True]}], 'conf_type': ['param']},
 
   {'name': 'dp_atl', 'default': 0, 'type': 'UInt8', 'conf_type': ['param', 'struct'], 'update_once': True},
