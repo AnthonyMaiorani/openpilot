@@ -196,7 +196,7 @@ class NormalPermanentAlert(Alert):
 
 
 class StartupAlert(Alert):
-  def __init__(self, alert_text_1: str, alert_text_2: str = _("Always keep hands on wheel and eyes on road"), alert_status=AlertStatus.normal):
+  def __init__(self, alert_text_1: str, alert_text_2: str = _("Always keep eyes on road"), alert_status=AlertStatus.normal):
     super().__init__(alert_text_1, alert_text_2,
                      alert_status, AlertSize.mid,
                      Priority.LOWER, VisualAlert.none, AudibleAlert.none, 5.),
@@ -507,7 +507,7 @@ EVENTS: Dict[int, Dict[str, Union[Alert, AlertCallbackType]]] = {
 
   EventName.preLaneChangeLeft: {
     ET.WARNING: Alert(
-      _("Steer Left to Start Lane Change Once Safe"),
+      _("ALC Unavailable - Road Edge Detected"),
       "",
       AlertStatus.normal, AlertSize.small,
       Priority.LOW, VisualAlert.none, AudibleAlert.none, .1, alert_rate=0.75),
@@ -515,7 +515,7 @@ EVENTS: Dict[int, Dict[str, Union[Alert, AlertCallbackType]]] = {
 
   EventName.preLaneChangeRight: {
     ET.WARNING: Alert(
-      _("Steer Right to Start Lane Change Once Safe"),
+      _("ALC Unavailable - Road Edge Detected"),
       "",
       AlertStatus.normal, AlertSize.small,
       Priority.LOW, VisualAlert.none, AudibleAlert.none, .1, alert_rate=0.75),
@@ -701,7 +701,7 @@ EVENTS: Dict[int, Dict[str, Union[Alert, AlertCallbackType]]] = {
   },
 
   EventName.noGps: {
-    ET.PERMANENT: no_gps_alert,
+    #ET.PERMANENT: no_gps_alert,
   },
 
   EventName.soundsUnavailable: {
@@ -710,7 +710,7 @@ EVENTS: Dict[int, Dict[str, Union[Alert, AlertCallbackType]]] = {
   },
 
   EventName.tooDistracted: {
-    ET.NO_ENTRY: NoEntryAlert(_("Distraction Level Too High")),
+    #ET.NO_ENTRY: NoEntryAlert(_("Distraction Level Too High")),
   },
 
   EventName.overheat: {
@@ -841,8 +841,8 @@ EVENTS: Dict[int, Dict[str, Union[Alert, AlertCallbackType]]] = {
   },
 
   EventName.controlsMismatch: {
-    ET.IMMEDIATE_DISABLE: ImmediateDisableAlert(_("Controls Mismatch")),
-    ET.NO_ENTRY: NoEntryAlert(_("Controls Mismatch")),
+    ET.USER_DISABLE: soft_disable_alert(_("Controls initializing, please wait")),
+    ET.NO_ENTRY: NoEntryAlert(_("Controls initializing, please wait")),
   },
 
   EventName.roadCameraError: {

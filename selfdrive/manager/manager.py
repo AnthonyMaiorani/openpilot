@@ -42,22 +42,22 @@ def manager_init() -> None:
   params.clear_all(ParamKeyType.CLEAR_ON_OFFROAD_TRANSITION)
 
   default_params: List[Tuple[str, Union[str, bytes]]] = [
-    ("CompletedTrainingVersion", "0"),
+    ("CompletedTrainingVersion", "0.2.0"),
     ("DisengageOnAccelerator", "0"),
     ("GsmMetered", "1"),
-    ("HasAcceptedTerms", "0"),
+    ("HasAcceptedTerms", "2"),
     ("LanguageSetting", "main_en"),
     ("OpenpilotEnabledToggle", "1"),
     ("LongitudinalPersonality", str(log.LongitudinalPersonality.standard)),
 
     # dp
-    ("dp_alka", "0"),
+    ("dp_alka", "1"),
     ("dp_device_ip_addr", ""),
     ("dp_device_auto_shutdown", "0"),
     ("dp_device_auto_shutdown_in", "30"),
-    ("dp_device_disable_temp_check", "0"),
+    ("dp_device_disable_temp_check", "1"),
     ("dp_device_display_off_mode", "0"),
-    ("dp_device_audible_alert_mode", "0"),
+    ("dp_device_audible_alert_mode", "1"),
     ("dp_toyota_auto_lock", "0"),
     ("dp_toyota_auto_unlock", "0"),
     ("dp_toyota_sng", "0"),
@@ -76,13 +76,13 @@ def manager_init() -> None:
     ("dp_long_taco", "0"),
     ("dp_long_stock_mode", "0"),
     ("dp_long_missing_lead_warning", "0"),
-    ("dp_lateral_road_edge_detection", "0"),
+    ("dp_lateral_road_edge_detection", "1"),
     ("dp_nav_voice_guidance", "0"),
     ("dp_long_frogai_aggre_accel_tune", "0"),
     ("dp_toyota_zss", "0"),
     ("dp_long_accel_btn", "0"),
     ("dp_long_personality_btn", "0"),
-    ("dp_disable_onroad_uploads", "0"),
+    ("dp_disable_onroad_uploads", "1"),
     ("dp_long_frogai_smooth_braking_tune", "0"),
   ]
   if not PC:
