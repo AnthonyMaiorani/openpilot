@@ -33,6 +33,8 @@ import glob
 import requests
 import json
 
+from openpilot.selfdrive.dragonpilot.utils import is_private_ip
+
 # customisable values
 GPX_LOG_PATH = '/data/media/0/gpx_logs/'
 LOG_HERTZ = 1/10 # 0.1 Hz = 10 sec, higher for higher accuracy, 10hz seems fine
@@ -104,14 +106,16 @@ class GpxUploader():
       'description': f"Routes from dragonpilot {self._branch} / {self._version} ({self._car_model}).",
       'visibility': 'identifiable'
     }
-    files = {
-      "file": (fn, open(filename, 'rb'))
-    }
     try:
-      r = requests.post(UPLOAD_URL, files=files, data=data, headers=API_HEADER)
+      if not is_private_ip():
+        return False
+      with open(filename, 'rb') as file:
+        files = {"file": (fn, file)}
+        r = requests.post(UPLOAD_URL, files=files, data=data, headers=API_HEADER)
       _debug("do_upload - %s - %s" % (filename, r.status_code))
       return r.status_code == 200
-    except Exception:
+    except Exception as e:
+      print(f"Error in _do_upload: {e}")
       return False
 
   def run(self):

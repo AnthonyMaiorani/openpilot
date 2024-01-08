@@ -58,6 +58,7 @@ enum class ImageSensor_d810b1e7705dd69c: uint16_t {
   UNKNOWN,
   AR0231,
   OX03C10,
+  OS04C10,
 };
 CAPNP_DECLARE_ENUM(ImageSensor, d810b1e7705dd69c);
 CAPNP_DECLARE_SCHEMA(bcc3efbac41d2048);
@@ -2402,7 +2403,7 @@ struct Event {
     LATERAL_PLAN,
     KALMAN_ODOMETRY_D_E_P_R_E_C_A_T_E_D,
     THUMBNAIL,
-    CAR_EVENTS,
+    ONROAD_EVENTS,
     CAR_PARAMS,
     DRIVER_CAMERA_STATE,
     DRIVER_MONITORING_STATE,
@@ -5443,7 +5444,7 @@ public:
 
   inline bool getControlsAllowed() const;
 
-  inline bool getGasInterceptorDetected() const;
+  inline bool getGasInterceptorDetectedDEPRECATED() const;
 
   inline bool getStartedSignalDetectedDEPRECATED() const;
 
@@ -5553,8 +5554,8 @@ public:
   inline bool getControlsAllowed();
   inline void setControlsAllowed(bool value);
 
-  inline bool getGasInterceptorDetected();
-  inline void setGasInterceptorDetected(bool value);
+  inline bool getGasInterceptorDetectedDEPRECATED();
+  inline void setGasInterceptorDetectedDEPRECATED(bool value);
 
   inline bool getStartedSignalDetectedDEPRECATED();
   inline void setStartedSignalDetectedDEPRECATED(bool value);
@@ -18844,9 +18845,9 @@ public:
 
   inline bool getValid() const;
 
-  inline bool isCarEvents() const;
-  inline bool hasCarEvents() const;
-  inline  ::capnp::List< ::cereal::CarEvent,  ::capnp::Kind::STRUCT>::Reader getCarEvents() const;
+  inline bool isOnroadEvents() const;
+  inline bool hasOnroadEvents() const;
+  inline  ::capnp::List< ::cereal::CarEvent,  ::capnp::Kind::STRUCT>::Reader getOnroadEvents() const;
 
   inline bool isCarParams() const;
   inline bool hasCarParams() const;
@@ -19643,13 +19644,13 @@ public:
   inline bool getValid();
   inline void setValid(bool value);
 
-  inline bool isCarEvents();
-  inline bool hasCarEvents();
-  inline  ::capnp::List< ::cereal::CarEvent,  ::capnp::Kind::STRUCT>::Builder getCarEvents();
-  inline void setCarEvents( ::capnp::List< ::cereal::CarEvent,  ::capnp::Kind::STRUCT>::Reader value);
-  inline  ::capnp::List< ::cereal::CarEvent,  ::capnp::Kind::STRUCT>::Builder initCarEvents(unsigned int size);
-  inline void adoptCarEvents(::capnp::Orphan< ::capnp::List< ::cereal::CarEvent,  ::capnp::Kind::STRUCT>>&& value);
-  inline ::capnp::Orphan< ::capnp::List< ::cereal::CarEvent,  ::capnp::Kind::STRUCT>> disownCarEvents();
+  inline bool isOnroadEvents();
+  inline bool hasOnroadEvents();
+  inline  ::capnp::List< ::cereal::CarEvent,  ::capnp::Kind::STRUCT>::Builder getOnroadEvents();
+  inline void setOnroadEvents( ::capnp::List< ::cereal::CarEvent,  ::capnp::Kind::STRUCT>::Reader value);
+  inline  ::capnp::List< ::cereal::CarEvent,  ::capnp::Kind::STRUCT>::Builder initOnroadEvents(unsigned int size);
+  inline void adoptOnroadEvents(::capnp::Orphan< ::capnp::List< ::cereal::CarEvent,  ::capnp::Kind::STRUCT>>&& value);
+  inline ::capnp::Orphan< ::capnp::List< ::cereal::CarEvent,  ::capnp::Kind::STRUCT>> disownOnroadEvents();
 
   inline bool isCarParams();
   inline bool hasCarParams();
@@ -25183,16 +25184,16 @@ inline void PandaState::Builder::setControlsAllowed(bool value) {
       ::capnp::bounded<65>() * ::capnp::ELEMENTS, value);
 }
 
-inline bool PandaState::Reader::getGasInterceptorDetected() const {
+inline bool PandaState::Reader::getGasInterceptorDetectedDEPRECATED() const {
   return _reader.getDataField<bool>(
       ::capnp::bounded<66>() * ::capnp::ELEMENTS);
 }
 
-inline bool PandaState::Builder::getGasInterceptorDetected() {
+inline bool PandaState::Builder::getGasInterceptorDetectedDEPRECATED() {
   return _builder.getDataField<bool>(
       ::capnp::bounded<66>() * ::capnp::ELEMENTS);
 }
-inline void PandaState::Builder::setGasInterceptorDetected(bool value) {
+inline void PandaState::Builder::setGasInterceptorDetectedDEPRECATED(bool value) {
   _builder.setDataField<bool>(
       ::capnp::bounded<66>() * ::capnp::ELEMENTS, value);
 }
@@ -49623,55 +49624,55 @@ inline void Event::Builder::setValid(bool value) {
       ::capnp::bounded<80>() * ::capnp::ELEMENTS, value, true);
 }
 
-inline bool Event::Reader::isCarEvents() const {
-  return which() == Event::CAR_EVENTS;
+inline bool Event::Reader::isOnroadEvents() const {
+  return which() == Event::ONROAD_EVENTS;
 }
-inline bool Event::Builder::isCarEvents() {
-  return which() == Event::CAR_EVENTS;
+inline bool Event::Builder::isOnroadEvents() {
+  return which() == Event::ONROAD_EVENTS;
 }
-inline bool Event::Reader::hasCarEvents() const {
-  if (which() != Event::CAR_EVENTS) return false;
+inline bool Event::Reader::hasOnroadEvents() const {
+  if (which() != Event::ONROAD_EVENTS) return false;
   return !_reader.getPointerField(
       ::capnp::bounded<0>() * ::capnp::POINTERS).isNull();
 }
-inline bool Event::Builder::hasCarEvents() {
-  if (which() != Event::CAR_EVENTS) return false;
+inline bool Event::Builder::hasOnroadEvents() {
+  if (which() != Event::ONROAD_EVENTS) return false;
   return !_builder.getPointerField(
       ::capnp::bounded<0>() * ::capnp::POINTERS).isNull();
 }
-inline  ::capnp::List< ::cereal::CarEvent,  ::capnp::Kind::STRUCT>::Reader Event::Reader::getCarEvents() const {
-  KJ_IREQUIRE((which() == Event::CAR_EVENTS),
+inline  ::capnp::List< ::cereal::CarEvent,  ::capnp::Kind::STRUCT>::Reader Event::Reader::getOnroadEvents() const {
+  KJ_IREQUIRE((which() == Event::ONROAD_EVENTS),
               "Must check which() before get()ing a union member.");
   return ::capnp::_::PointerHelpers< ::capnp::List< ::cereal::CarEvent,  ::capnp::Kind::STRUCT>>::get(_reader.getPointerField(
       ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
-inline  ::capnp::List< ::cereal::CarEvent,  ::capnp::Kind::STRUCT>::Builder Event::Builder::getCarEvents() {
-  KJ_IREQUIRE((which() == Event::CAR_EVENTS),
+inline  ::capnp::List< ::cereal::CarEvent,  ::capnp::Kind::STRUCT>::Builder Event::Builder::getOnroadEvents() {
+  KJ_IREQUIRE((which() == Event::ONROAD_EVENTS),
               "Must check which() before get()ing a union member.");
   return ::capnp::_::PointerHelpers< ::capnp::List< ::cereal::CarEvent,  ::capnp::Kind::STRUCT>>::get(_builder.getPointerField(
       ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
-inline void Event::Builder::setCarEvents( ::capnp::List< ::cereal::CarEvent,  ::capnp::Kind::STRUCT>::Reader value) {
+inline void Event::Builder::setOnroadEvents( ::capnp::List< ::cereal::CarEvent,  ::capnp::Kind::STRUCT>::Reader value) {
   _builder.setDataField<Event::Which>(
-      ::capnp::bounded<4>() * ::capnp::ELEMENTS, Event::CAR_EVENTS);
+      ::capnp::bounded<4>() * ::capnp::ELEMENTS, Event::ONROAD_EVENTS);
   ::capnp::_::PointerHelpers< ::capnp::List< ::cereal::CarEvent,  ::capnp::Kind::STRUCT>>::set(_builder.getPointerField(
       ::capnp::bounded<0>() * ::capnp::POINTERS), value);
 }
-inline  ::capnp::List< ::cereal::CarEvent,  ::capnp::Kind::STRUCT>::Builder Event::Builder::initCarEvents(unsigned int size) {
+inline  ::capnp::List< ::cereal::CarEvent,  ::capnp::Kind::STRUCT>::Builder Event::Builder::initOnroadEvents(unsigned int size) {
   _builder.setDataField<Event::Which>(
-      ::capnp::bounded<4>() * ::capnp::ELEMENTS, Event::CAR_EVENTS);
+      ::capnp::bounded<4>() * ::capnp::ELEMENTS, Event::ONROAD_EVENTS);
   return ::capnp::_::PointerHelpers< ::capnp::List< ::cereal::CarEvent,  ::capnp::Kind::STRUCT>>::init(_builder.getPointerField(
       ::capnp::bounded<0>() * ::capnp::POINTERS), size);
 }
-inline void Event::Builder::adoptCarEvents(
+inline void Event::Builder::adoptOnroadEvents(
     ::capnp::Orphan< ::capnp::List< ::cereal::CarEvent,  ::capnp::Kind::STRUCT>>&& value) {
   _builder.setDataField<Event::Which>(
-      ::capnp::bounded<4>() * ::capnp::ELEMENTS, Event::CAR_EVENTS);
+      ::capnp::bounded<4>() * ::capnp::ELEMENTS, Event::ONROAD_EVENTS);
   ::capnp::_::PointerHelpers< ::capnp::List< ::cereal::CarEvent,  ::capnp::Kind::STRUCT>>::adopt(_builder.getPointerField(
       ::capnp::bounded<0>() * ::capnp::POINTERS), kj::mv(value));
 }
-inline ::capnp::Orphan< ::capnp::List< ::cereal::CarEvent,  ::capnp::Kind::STRUCT>> Event::Builder::disownCarEvents() {
-  KJ_IREQUIRE((which() == Event::CAR_EVENTS),
+inline ::capnp::Orphan< ::capnp::List< ::cereal::CarEvent,  ::capnp::Kind::STRUCT>> Event::Builder::disownOnroadEvents() {
+  KJ_IREQUIRE((which() == Event::ONROAD_EVENTS),
               "Must check which() before get()ing a union member.");
   return ::capnp::_::PointerHelpers< ::capnp::List< ::cereal::CarEvent,  ::capnp::Kind::STRUCT>>::disown(_builder.getPointerField(
       ::capnp::bounded<0>() * ::capnp::POINTERS));

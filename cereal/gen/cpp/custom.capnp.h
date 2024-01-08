@@ -24,18 +24,8 @@ enum class LongitudinalPlanExtSource_b42a75baee731fce: uint16_t {
   LEAD2,
   E2E,
   TURN,
-  LIMIT,
-  TURNLIMIT,
 };
 CAPNP_DECLARE_ENUM(LongitudinalPlanExtSource, b42a75baee731fce);
-CAPNP_DECLARE_SCHEMA(9e7784369b990802);
-enum class SpeedLimitControlState_9e7784369b990802: uint16_t {
-  INACTIVE,
-  TEMP_INACTIVE,
-  ADAPTING,
-  ACTIVE,
-};
-CAPNP_DECLARE_ENUM(SpeedLimitControlState, 9e7784369b990802);
 CAPNP_DECLARE_SCHEMA(d1124e845254aeda);
 enum class VisionTurnControllerState_d1124e845254aeda: uint16_t {
   DISABLED,
@@ -81,13 +71,11 @@ struct LongitudinalPlanExt {
   class Pipeline;
   typedef ::capnp::schemas::LongitudinalPlanExtSource_b42a75baee731fce LongitudinalPlanExtSource;
 
-  typedef ::capnp::schemas::SpeedLimitControlState_9e7784369b990802 SpeedLimitControlState;
-
   typedef ::capnp::schemas::VisionTurnControllerState_d1124e845254aeda VisionTurnControllerState;
 
 
   struct _capnpPrivate {
-    CAPNP_DECLARE_STRUCT_HEADER(aedffd8f31e7b55d, 5, 0)
+    CAPNP_DECLARE_STRUCT_HEADER(aedffd8f31e7b55d, 2, 0)
     #if !CAPNP_LITE
     static constexpr ::capnp::_::RawBrandedSchema const* brand() { return &schema->defaultBrand; }
     #endif  // !CAPNP_LITE
@@ -427,37 +415,15 @@ public:
   }
 #endif  // !CAPNP_LITE
 
+  inline bool getDpE2EIsBlended() const;
+
+  inline bool getDe2eIsEnabled() const;
+
   inline  ::cereal::LongitudinalPlanExt::VisionTurnControllerState getVisionTurnControllerState() const;
 
   inline float getVisionTurnSpeed() const;
 
-  inline  ::cereal::LongitudinalPlanExt::SpeedLimitControlState getSpeedLimitControlState() const;
-
-  inline float getSpeedLimit() const;
-
-  inline float getSpeedLimitOffset() const;
-
-  inline float getDistToSpeedLimit() const;
-
-  inline bool getIsMapSpeedLimit() const;
-
-  inline bool getSpeedLimitPercOffset() const;
-
-  inline float getSpeedLimitValueOffset() const;
-
-  inline float getDistToTurn() const;
-
-  inline float getTurnSpeed() const;
-
-  inline  ::cereal::LongitudinalPlanExt::SpeedLimitControlState getTurnSpeedControlState() const;
-
-  inline  ::int16_t getTurnSign() const;
-
-  inline bool getDpE2EIsBlended() const;
-
   inline  ::cereal::LongitudinalPlanExt::LongitudinalPlanExtSource getLongitudinalPlanExtSource() const;
-
-  inline bool getDe2eIsEnabled() const;
 
 private:
   ::capnp::_::StructReader _reader;
@@ -487,53 +453,20 @@ public:
   inline ::kj::StringTree toString() const { return asReader().toString(); }
 #endif  // !CAPNP_LITE
 
+  inline bool getDpE2EIsBlended();
+  inline void setDpE2EIsBlended(bool value);
+
+  inline bool getDe2eIsEnabled();
+  inline void setDe2eIsEnabled(bool value);
+
   inline  ::cereal::LongitudinalPlanExt::VisionTurnControllerState getVisionTurnControllerState();
   inline void setVisionTurnControllerState( ::cereal::LongitudinalPlanExt::VisionTurnControllerState value);
 
   inline float getVisionTurnSpeed();
   inline void setVisionTurnSpeed(float value);
 
-  inline  ::cereal::LongitudinalPlanExt::SpeedLimitControlState getSpeedLimitControlState();
-  inline void setSpeedLimitControlState( ::cereal::LongitudinalPlanExt::SpeedLimitControlState value);
-
-  inline float getSpeedLimit();
-  inline void setSpeedLimit(float value);
-
-  inline float getSpeedLimitOffset();
-  inline void setSpeedLimitOffset(float value);
-
-  inline float getDistToSpeedLimit();
-  inline void setDistToSpeedLimit(float value);
-
-  inline bool getIsMapSpeedLimit();
-  inline void setIsMapSpeedLimit(bool value);
-
-  inline bool getSpeedLimitPercOffset();
-  inline void setSpeedLimitPercOffset(bool value);
-
-  inline float getSpeedLimitValueOffset();
-  inline void setSpeedLimitValueOffset(float value);
-
-  inline float getDistToTurn();
-  inline void setDistToTurn(float value);
-
-  inline float getTurnSpeed();
-  inline void setTurnSpeed(float value);
-
-  inline  ::cereal::LongitudinalPlanExt::SpeedLimitControlState getTurnSpeedControlState();
-  inline void setTurnSpeedControlState( ::cereal::LongitudinalPlanExt::SpeedLimitControlState value);
-
-  inline  ::int16_t getTurnSign();
-  inline void setTurnSign( ::int16_t value);
-
-  inline bool getDpE2EIsBlended();
-  inline void setDpE2EIsBlended(bool value);
-
   inline  ::cereal::LongitudinalPlanExt::LongitudinalPlanExtSource getLongitudinalPlanExtSource();
   inline void setLongitudinalPlanExtSource( ::cereal::LongitudinalPlanExt::LongitudinalPlanExtSource value);
-
-  inline bool getDe2eIsEnabled();
-  inline void setDe2eIsEnabled(bool value);
 
 private:
   ::capnp::_::StructBuilder _builder;
@@ -1535,18 +1468,46 @@ inline void LiveMapData::Builder::setLastGpsBearingAccuracyDeg(float value) {
       ::capnp::bounded<15>() * ::capnp::ELEMENTS, value);
 }
 
+inline bool LongitudinalPlanExt::Reader::getDpE2EIsBlended() const {
+  return _reader.getDataField<bool>(
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS);
+}
+
+inline bool LongitudinalPlanExt::Builder::getDpE2EIsBlended() {
+  return _builder.getDataField<bool>(
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS);
+}
+inline void LongitudinalPlanExt::Builder::setDpE2EIsBlended(bool value) {
+  _builder.setDataField<bool>(
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS, value);
+}
+
+inline bool LongitudinalPlanExt::Reader::getDe2eIsEnabled() const {
+  return _reader.getDataField<bool>(
+      ::capnp::bounded<1>() * ::capnp::ELEMENTS);
+}
+
+inline bool LongitudinalPlanExt::Builder::getDe2eIsEnabled() {
+  return _builder.getDataField<bool>(
+      ::capnp::bounded<1>() * ::capnp::ELEMENTS);
+}
+inline void LongitudinalPlanExt::Builder::setDe2eIsEnabled(bool value) {
+  _builder.setDataField<bool>(
+      ::capnp::bounded<1>() * ::capnp::ELEMENTS, value);
+}
+
 inline  ::cereal::LongitudinalPlanExt::VisionTurnControllerState LongitudinalPlanExt::Reader::getVisionTurnControllerState() const {
   return _reader.getDataField< ::cereal::LongitudinalPlanExt::VisionTurnControllerState>(
-      ::capnp::bounded<0>() * ::capnp::ELEMENTS);
+      ::capnp::bounded<1>() * ::capnp::ELEMENTS);
 }
 
 inline  ::cereal::LongitudinalPlanExt::VisionTurnControllerState LongitudinalPlanExt::Builder::getVisionTurnControllerState() {
   return _builder.getDataField< ::cereal::LongitudinalPlanExt::VisionTurnControllerState>(
-      ::capnp::bounded<0>() * ::capnp::ELEMENTS);
+      ::capnp::bounded<1>() * ::capnp::ELEMENTS);
 }
 inline void LongitudinalPlanExt::Builder::setVisionTurnControllerState( ::cereal::LongitudinalPlanExt::VisionTurnControllerState value) {
   _builder.setDataField< ::cereal::LongitudinalPlanExt::VisionTurnControllerState>(
-      ::capnp::bounded<0>() * ::capnp::ELEMENTS, value);
+      ::capnp::bounded<1>() * ::capnp::ELEMENTS, value);
 }
 
 inline float LongitudinalPlanExt::Reader::getVisionTurnSpeed() const {
@@ -1563,200 +1524,18 @@ inline void LongitudinalPlanExt::Builder::setVisionTurnSpeed(float value) {
       ::capnp::bounded<1>() * ::capnp::ELEMENTS, value);
 }
 
-inline  ::cereal::LongitudinalPlanExt::SpeedLimitControlState LongitudinalPlanExt::Reader::getSpeedLimitControlState() const {
-  return _reader.getDataField< ::cereal::LongitudinalPlanExt::SpeedLimitControlState>(
-      ::capnp::bounded<1>() * ::capnp::ELEMENTS);
-}
-
-inline  ::cereal::LongitudinalPlanExt::SpeedLimitControlState LongitudinalPlanExt::Builder::getSpeedLimitControlState() {
-  return _builder.getDataField< ::cereal::LongitudinalPlanExt::SpeedLimitControlState>(
-      ::capnp::bounded<1>() * ::capnp::ELEMENTS);
-}
-inline void LongitudinalPlanExt::Builder::setSpeedLimitControlState( ::cereal::LongitudinalPlanExt::SpeedLimitControlState value) {
-  _builder.setDataField< ::cereal::LongitudinalPlanExt::SpeedLimitControlState>(
-      ::capnp::bounded<1>() * ::capnp::ELEMENTS, value);
-}
-
-inline float LongitudinalPlanExt::Reader::getSpeedLimit() const {
-  return _reader.getDataField<float>(
-      ::capnp::bounded<2>() * ::capnp::ELEMENTS);
-}
-
-inline float LongitudinalPlanExt::Builder::getSpeedLimit() {
-  return _builder.getDataField<float>(
-      ::capnp::bounded<2>() * ::capnp::ELEMENTS);
-}
-inline void LongitudinalPlanExt::Builder::setSpeedLimit(float value) {
-  _builder.setDataField<float>(
-      ::capnp::bounded<2>() * ::capnp::ELEMENTS, value);
-}
-
-inline float LongitudinalPlanExt::Reader::getSpeedLimitOffset() const {
-  return _reader.getDataField<float>(
-      ::capnp::bounded<3>() * ::capnp::ELEMENTS);
-}
-
-inline float LongitudinalPlanExt::Builder::getSpeedLimitOffset() {
-  return _builder.getDataField<float>(
-      ::capnp::bounded<3>() * ::capnp::ELEMENTS);
-}
-inline void LongitudinalPlanExt::Builder::setSpeedLimitOffset(float value) {
-  _builder.setDataField<float>(
-      ::capnp::bounded<3>() * ::capnp::ELEMENTS, value);
-}
-
-inline float LongitudinalPlanExt::Reader::getDistToSpeedLimit() const {
-  return _reader.getDataField<float>(
-      ::capnp::bounded<4>() * ::capnp::ELEMENTS);
-}
-
-inline float LongitudinalPlanExt::Builder::getDistToSpeedLimit() {
-  return _builder.getDataField<float>(
-      ::capnp::bounded<4>() * ::capnp::ELEMENTS);
-}
-inline void LongitudinalPlanExt::Builder::setDistToSpeedLimit(float value) {
-  _builder.setDataField<float>(
-      ::capnp::bounded<4>() * ::capnp::ELEMENTS, value);
-}
-
-inline bool LongitudinalPlanExt::Reader::getIsMapSpeedLimit() const {
-  return _reader.getDataField<bool>(
-      ::capnp::bounded<160>() * ::capnp::ELEMENTS);
-}
-
-inline bool LongitudinalPlanExt::Builder::getIsMapSpeedLimit() {
-  return _builder.getDataField<bool>(
-      ::capnp::bounded<160>() * ::capnp::ELEMENTS);
-}
-inline void LongitudinalPlanExt::Builder::setIsMapSpeedLimit(bool value) {
-  _builder.setDataField<bool>(
-      ::capnp::bounded<160>() * ::capnp::ELEMENTS, value);
-}
-
-inline bool LongitudinalPlanExt::Reader::getSpeedLimitPercOffset() const {
-  return _reader.getDataField<bool>(
-      ::capnp::bounded<161>() * ::capnp::ELEMENTS);
-}
-
-inline bool LongitudinalPlanExt::Builder::getSpeedLimitPercOffset() {
-  return _builder.getDataField<bool>(
-      ::capnp::bounded<161>() * ::capnp::ELEMENTS);
-}
-inline void LongitudinalPlanExt::Builder::setSpeedLimitPercOffset(bool value) {
-  _builder.setDataField<bool>(
-      ::capnp::bounded<161>() * ::capnp::ELEMENTS, value);
-}
-
-inline float LongitudinalPlanExt::Reader::getSpeedLimitValueOffset() const {
-  return _reader.getDataField<float>(
-      ::capnp::bounded<6>() * ::capnp::ELEMENTS);
-}
-
-inline float LongitudinalPlanExt::Builder::getSpeedLimitValueOffset() {
-  return _builder.getDataField<float>(
-      ::capnp::bounded<6>() * ::capnp::ELEMENTS);
-}
-inline void LongitudinalPlanExt::Builder::setSpeedLimitValueOffset(float value) {
-  _builder.setDataField<float>(
-      ::capnp::bounded<6>() * ::capnp::ELEMENTS, value);
-}
-
-inline float LongitudinalPlanExt::Reader::getDistToTurn() const {
-  return _reader.getDataField<float>(
-      ::capnp::bounded<7>() * ::capnp::ELEMENTS);
-}
-
-inline float LongitudinalPlanExt::Builder::getDistToTurn() {
-  return _builder.getDataField<float>(
-      ::capnp::bounded<7>() * ::capnp::ELEMENTS);
-}
-inline void LongitudinalPlanExt::Builder::setDistToTurn(float value) {
-  _builder.setDataField<float>(
-      ::capnp::bounded<7>() * ::capnp::ELEMENTS, value);
-}
-
-inline float LongitudinalPlanExt::Reader::getTurnSpeed() const {
-  return _reader.getDataField<float>(
-      ::capnp::bounded<8>() * ::capnp::ELEMENTS);
-}
-
-inline float LongitudinalPlanExt::Builder::getTurnSpeed() {
-  return _builder.getDataField<float>(
-      ::capnp::bounded<8>() * ::capnp::ELEMENTS);
-}
-inline void LongitudinalPlanExt::Builder::setTurnSpeed(float value) {
-  _builder.setDataField<float>(
-      ::capnp::bounded<8>() * ::capnp::ELEMENTS, value);
-}
-
-inline  ::cereal::LongitudinalPlanExt::SpeedLimitControlState LongitudinalPlanExt::Reader::getTurnSpeedControlState() const {
-  return _reader.getDataField< ::cereal::LongitudinalPlanExt::SpeedLimitControlState>(
-      ::capnp::bounded<11>() * ::capnp::ELEMENTS);
-}
-
-inline  ::cereal::LongitudinalPlanExt::SpeedLimitControlState LongitudinalPlanExt::Builder::getTurnSpeedControlState() {
-  return _builder.getDataField< ::cereal::LongitudinalPlanExt::SpeedLimitControlState>(
-      ::capnp::bounded<11>() * ::capnp::ELEMENTS);
-}
-inline void LongitudinalPlanExt::Builder::setTurnSpeedControlState( ::cereal::LongitudinalPlanExt::SpeedLimitControlState value) {
-  _builder.setDataField< ::cereal::LongitudinalPlanExt::SpeedLimitControlState>(
-      ::capnp::bounded<11>() * ::capnp::ELEMENTS, value);
-}
-
-inline  ::int16_t LongitudinalPlanExt::Reader::getTurnSign() const {
-  return _reader.getDataField< ::int16_t>(
-      ::capnp::bounded<18>() * ::capnp::ELEMENTS);
-}
-
-inline  ::int16_t LongitudinalPlanExt::Builder::getTurnSign() {
-  return _builder.getDataField< ::int16_t>(
-      ::capnp::bounded<18>() * ::capnp::ELEMENTS);
-}
-inline void LongitudinalPlanExt::Builder::setTurnSign( ::int16_t value) {
-  _builder.setDataField< ::int16_t>(
-      ::capnp::bounded<18>() * ::capnp::ELEMENTS, value);
-}
-
-inline bool LongitudinalPlanExt::Reader::getDpE2EIsBlended() const {
-  return _reader.getDataField<bool>(
-      ::capnp::bounded<162>() * ::capnp::ELEMENTS);
-}
-
-inline bool LongitudinalPlanExt::Builder::getDpE2EIsBlended() {
-  return _builder.getDataField<bool>(
-      ::capnp::bounded<162>() * ::capnp::ELEMENTS);
-}
-inline void LongitudinalPlanExt::Builder::setDpE2EIsBlended(bool value) {
-  _builder.setDataField<bool>(
-      ::capnp::bounded<162>() * ::capnp::ELEMENTS, value);
-}
-
 inline  ::cereal::LongitudinalPlanExt::LongitudinalPlanExtSource LongitudinalPlanExt::Reader::getLongitudinalPlanExtSource() const {
   return _reader.getDataField< ::cereal::LongitudinalPlanExt::LongitudinalPlanExtSource>(
-      ::capnp::bounded<19>() * ::capnp::ELEMENTS);
+      ::capnp::bounded<4>() * ::capnp::ELEMENTS);
 }
 
 inline  ::cereal::LongitudinalPlanExt::LongitudinalPlanExtSource LongitudinalPlanExt::Builder::getLongitudinalPlanExtSource() {
   return _builder.getDataField< ::cereal::LongitudinalPlanExt::LongitudinalPlanExtSource>(
-      ::capnp::bounded<19>() * ::capnp::ELEMENTS);
+      ::capnp::bounded<4>() * ::capnp::ELEMENTS);
 }
 inline void LongitudinalPlanExt::Builder::setLongitudinalPlanExtSource( ::cereal::LongitudinalPlanExt::LongitudinalPlanExtSource value) {
   _builder.setDataField< ::cereal::LongitudinalPlanExt::LongitudinalPlanExtSource>(
-      ::capnp::bounded<19>() * ::capnp::ELEMENTS, value);
-}
-
-inline bool LongitudinalPlanExt::Reader::getDe2eIsEnabled() const {
-  return _reader.getDataField<bool>(
-      ::capnp::bounded<163>() * ::capnp::ELEMENTS);
-}
-
-inline bool LongitudinalPlanExt::Builder::getDe2eIsEnabled() {
-  return _builder.getDataField<bool>(
-      ::capnp::bounded<163>() * ::capnp::ELEMENTS);
-}
-inline void LongitudinalPlanExt::Builder::setDe2eIsEnabled(bool value) {
-  _builder.setDataField<bool>(
-      ::capnp::bounded<163>() * ::capnp::ELEMENTS, value);
+      ::capnp::bounded<4>() * ::capnp::ELEMENTS, value);
 }
 
 inline bool LateralPlanExt::Reader::hasDPathWLinesX() const {

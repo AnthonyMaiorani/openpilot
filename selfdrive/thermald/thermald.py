@@ -23,10 +23,11 @@ from openpilot.selfdrive.controls.lib.alertmanager import set_offroad_alert
 from openpilot.system.hardware import HARDWARE, TICI, AGNOS
 from openpilot.system.loggerd.config import get_available_percent
 from openpilot.selfdrive.statsd import statlog
-from openpilot.system.swaglog import cloudlog
+from openpilot.common.swaglog import cloudlog
 from openpilot.selfdrive.thermald.power_monitoring import PowerMonitoring
 from openpilot.selfdrive.thermald.fan_controller import TiciFanController
 from openpilot.system.version import terms_version, training_version
+from openpilot.selfdrive.dragonpilot.utils import get_ip_addr
 
 ThermalStatus = log.DeviceState.ThermalStatus
 NetworkType = log.DeviceState.NetworkType
@@ -81,7 +82,7 @@ def read_tz(x):
 
 
 def read_thermal(thermal_config):
-  dat = messaging.new_message('deviceState')
+  dat = messaging.new_message('deviceState', valid=True)
   dat.deviceState.cpuTempC = [read_tz(z) / thermal_config.cpu[1] for z in thermal_config.cpu[0]]
   dat.deviceState.gpuTempC = [read_tz(z) / thermal_config.gpu[1] for z in thermal_config.gpu[0]]
   dat.deviceState.memoryTempC = read_tz(thermal_config.mem[0]) / thermal_config.mem[1]
@@ -165,18 +166,6 @@ def hw_state_thread(end_event, hw_queue):
     count += 1
     time.sleep(DT_TRML)
 
-def set_local_ip_addr():
-  import socket
-  s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-  try:
-    # doesn't even have to be reachable
-    s.connect(('10.255.255.255', 1))
-    ip = s.getsockname()[0]
-  except:
-    ip = ''
-  finally:
-    s.close()
-  Params().put('dp_device_ip_addr', ip)
 
 def thermald_thread(end_event, hw_queue) -> None:
   pm = messaging.PubMaster(['deviceState'])
@@ -225,7 +214,9 @@ def thermald_thread(end_event, hw_queue) -> None:
   while not end_event.is_set():
     # rick - update IP every 10s
     if count % int(10. / DT_TRML) == 0:
-      set_local_ip_addr()
+      ip = get_ip_addr()
+      ip = '' if ip is None else ip
+      params.put('dp_device_ip_addr', ip)
 
     sm.update(PANDA_STATES_TIMEOUT)
 

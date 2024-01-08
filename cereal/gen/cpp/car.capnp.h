@@ -2345,6 +2345,8 @@ public:
 
   inline float getTireStiffnessFactor() const;
 
+  inline bool getPassive() const;
+
 private:
   ::capnp::_::StructReader _reader;
   template <typename, ::capnp::Kind>
@@ -2640,6 +2642,9 @@ public:
 
   inline float getTireStiffnessFactor();
   inline void setTireStiffnessFactor(float value);
+
+  inline bool getPassive();
+  inline void setPassive(bool value);
 
 private:
   ::capnp::_::StructBuilder _builder;
@@ -7157,6 +7162,20 @@ inline float CarParams::Builder::getTireStiffnessFactor() {
 inline void CarParams::Builder::setTireStiffnessFactor(float value) {
   _builder.setDataField<float>(
       ::capnp::bounded<33>() * ::capnp::ELEMENTS, value);
+}
+
+inline bool CarParams::Reader::getPassive() const {
+  return _reader.getDataField<bool>(
+      ::capnp::bounded<996>() * ::capnp::ELEMENTS);
+}
+
+inline bool CarParams::Builder::getPassive() {
+  return _builder.getDataField<bool>(
+      ::capnp::bounded<996>() * ::capnp::ELEMENTS);
+}
+inline void CarParams::Builder::setPassive(bool value) {
+  _builder.setDataField<bool>(
+      ::capnp::bounded<996>() * ::capnp::ELEMENTS, value);
 }
 
 inline  ::cereal::CarParams::SafetyModel CarParams::SafetyConfig::Reader::getSafetyModel() const {

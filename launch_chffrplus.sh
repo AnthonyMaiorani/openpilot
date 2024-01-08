@@ -14,10 +14,10 @@ function agnos_init {
     echo -n openpilot > /data/params/d/GithubUsername
     cat /usr/comma/setup_keys > /data/params/d/GithubSshKeys
   fi
-
+  
   # wait longer for weston to come up
   if [ -f "$BASEDIR/prebuilt" ]; then
-    sleep 3
+    sleep 5
   fi
 
   # TODO: move this to agnos
@@ -90,7 +90,7 @@ function launch {
 
   # start manager
   cd selfdrive/manager
-  ./custom_dep.py && ./build.py && ./manager.py
+  ./build.py && ./manager.py
 
   # if broken, keep on screen error
   while true; do sleep 1; done

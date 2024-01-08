@@ -15,12 +15,11 @@ from openpilot.selfdrive.controls.lib.longcontrol import LongCtrlState
 from openpilot.selfdrive.controls.lib.longitudinal_mpc_lib.long_mpc import LongitudinalMpc
 from openpilot.selfdrive.controls.lib.longitudinal_mpc_lib.long_mpc import T_IDXS as T_IDXS_MPC
 from openpilot.selfdrive.controls.lib.drive_helpers import V_CRUISE_MAX, CONTROL_N, get_speed_error
-from openpilot.system.swaglog import cloudlog
-from openpilot.selfdrive.controls.lib.vision_turn_controller import VisionTurnController
-from openpilot.selfdrive.controls.lib.speed_limit_controller import SpeedLimitController, SpeedLimitResolver
-from openpilot.selfdrive.controls.lib.turn_speed_controller import TurnSpeedController
+from openpilot.common.swaglog import cloudlog
 from openpilot.selfdrive.controls.lib.accel_controller import AccelController
 from openpilot.selfdrive.controls.lib.dynamic_endtoend_controller import DynamicEndtoEndController
+
+from openpilot.selfdrive.controls.lib.vision_turn_controller import VisionTurnController
 
 LON_MPC_STEP = 0.2  # first step is 0.2s
 A_CRUISE_MIN = -1.2
@@ -53,13 +52,12 @@ def limit_accel_in_turns(v_ego, angle_steers, a_target, CP):
 
 class LongitudinalPlanner:
   def __init__(self, CP, init_v=0.0, init_a=0.0):
+    # DP:
+    self.accel_controller = AccelController()
+    self.dynamic_endtoend_controller = DynamicEndtoEndController()
     # mapd
     self.cruise_source = 'cruise'
     self.vision_turn_controller = VisionTurnController(CP)
-    self.speed_limit_controller = SpeedLimitController()
-    self.turn_speed_controller = TurnSpeedController()
-    self.accel_controller = AccelController()
-    self.dynamic_endtoend_controller = DynamicEndtoEndController()
 
     self.CP = CP
     self.mpc = LongitudinalMpc()
@@ -79,7 +77,8 @@ class LongitudinalPlanner:
     self.personality = log.LongitudinalPersonality.standard
     self.dp_long_use_df_tune = False
     self.dp_long_taco = self.params.get_bool('dp_long_taco')
-    self.dp_long_frogai_aggre_accel_tune = False
+    self.dp_long_use_krkeegen_tune = False
+    self.dp_long_use_krkeegen_tune_active = False
     self.dp_long_frogai_smooth_braking_tune = False
 
   def read_param(self):
@@ -89,7 +88,7 @@ class LongitudinalPlanner:
       self.personality = log.LongitudinalPersonality.standard
 
     self.dp_long_use_df_tune = self.params.get_bool('dp_long_use_df_tune')
-    self.dp_long_frogai_aggre_accel_tune = self.params.get_bool('dp_long_frogai_aggre_accel_tune')
+    self.dp_long_use_krkeegen_tune = self.params.get_bool('dp_long_use_krkeegen_tune')
     self.dp_long_frogai_smooth_braking_tune = self.params.get_bool('dp_long_frogai_smooth_braking_tune')
 
   @staticmethod
@@ -119,13 +118,13 @@ class LongitudinalPlanner:
     if self.param_read_counter % 50 == 0:
       self.read_param()
 
-    if self.param_read_counter % 100 == 0:
       self.accel_controller.set_profile(self.params.get("dp_long_accel_profile", encoding='utf-8'))
-      self.vision_turn_controller.set_enabled(self.params.get_bool("dp_mapd_vision_turn_control"))
       self.dynamic_endtoend_controller.set_enabled(self.params.get_bool("dp_long_de2e"))
+      self.vision_turn_controller.set_enabled(self.params.get_bool("dp_mapd_vision_turn_control"))
 
     self.param_read_counter += 1
     if self.dynamic_endtoend_controller.is_enabled():
+      self.dynamic_endtoend_controller.set_mpc_fcw_crash_cnt(self.mpc.crash_cnt)
       self.mpc.mode = self.dynamic_endtoend_controller.get_mpc_mode(self.CP.radarUnavailable, sm['carState'], sm['radarState'].leadOne, sm['modelV2'], sm['controlsState'])
     else:
       self.mpc.mode = 'blended' if sm['controlsState'].experimentalMode else 'acc'
@@ -189,7 +188,8 @@ class LongitudinalPlanner:
     self.mpc.set_accel_limits(accel_limits_turns[0], accel_limits_turns[1])
     self.mpc.set_cur_state(self.v_desired_filter.x, self.a_desired)
     x, v, a, j = self.parse_model(sm['modelV2'], self.v_model_error, v_ego, taco=self.dp_long_taco)
-    self.mpc.update(sm['radarState'], v_cruise_sol, x, v, a, j, personality=self.personality, use_df_tune=self.dp_long_use_df_tune, aggressive_acceleration=self.dp_long_frogai_aggre_accel_tune, smoother_braking=self.dp_long_frogai_smooth_braking_tune)
+    self.dp_long_use_krkeegen_tune_active = self.dp_long_use_krkeegen_tune and v_ego <= 7.5
+    self.mpc.update(sm['radarState'], v_cruise_sol, x, v, a, j, personality=self.personality, use_df_tune=self.dp_long_use_df_tune, use_krkeegen_tune=self.dp_long_use_krkeegen_tune_active, smoother_braking=self.dp_long_frogai_smooth_braking_tune)
 
     self.v_desired_trajectory_full = np.interp(ModelConstants.T_IDXS, T_IDXS_MPC, self.mpc.v_solution)
     self.a_desired_trajectory_full = np.interp(ModelConstants.T_IDXS, T_IDXS_MPC, self.mpc.a_solution)
@@ -232,34 +232,23 @@ class LongitudinalPlanner:
     # dp - extension
     plan_ext_send = messaging.new_message('longitudinalPlanExt')
 
+    plan_ext_send.valid = True
+
     longitudinalPlanExt = plan_ext_send.longitudinalPlanExt
 
     longitudinalPlanExt.visionTurnControllerState = self.vision_turn_controller.state
     longitudinalPlanExt.visionTurnSpeed = float(self.vision_turn_controller.v_turn)
 
-    longitudinalPlanExt.speedLimitControlState = self.speed_limit_controller.state
-    longitudinalPlanExt.speedLimit = float(self.speed_limit_controller.speed_limit)
-    longitudinalPlanExt.speedLimitOffset = float(self.speed_limit_controller.speed_limit_offset)
-    longitudinalPlanExt.distToSpeedLimit = float(self.speed_limit_controller.distance)
-    longitudinalPlanExt.isMapSpeedLimit = bool(self.speed_limit_controller.source == SpeedLimitResolver.Source.map_data)
-
-    longitudinalPlanExt.turnSpeedControlState = self.turn_speed_controller.state
-    longitudinalPlanExt.turnSpeed = float(self.turn_speed_controller.speed_limit)
-    longitudinalPlanExt.distToTurn = float(self.turn_speed_controller.distance)
-    longitudinalPlanExt.turnSign = int(self.turn_speed_controller.turn_sign)
-
     longitudinalPlanExt.dpE2EIsBlended = self.mpc.mode == 'blended'
     longitudinalPlanExt.de2eIsEnabled = self.dynamic_endtoend_controller.is_enabled()
 
     longitudinalPlanExt.longitudinalPlanExtSource = self.mpc.source if self.mpc.source != 'cruise' else self.cruise_source
+
     pm.send('longitudinalPlanExt', plan_ext_send)
 
-  # mapd
   def cruise_solutions(self, enabled, v_ego, a_ego, v_cruise, sm):
     # Update controllers
     self.vision_turn_controller.update(enabled, v_ego, a_ego, v_cruise, sm)
-    self.speed_limit_controller.update(enabled, v_ego, a_ego, v_cruise, sm['carState'].gasPressed)
-    self.turn_speed_controller.update(enabled, v_ego, a_ego, sm)
 
     # Pick solution with lowest velocity target.
     a_solutions = {'cruise': float("inf")}
@@ -268,14 +257,6 @@ class LongitudinalPlanner:
     if self.vision_turn_controller.is_active:
       a_solutions['turn'] = self.vision_turn_controller.a_target
       v_solutions['turn'] = self.vision_turn_controller.v_turn
-
-    if self.speed_limit_controller.is_active:
-      a_solutions['limit'] = self.speed_limit_controller.a_target
-      v_solutions['limit'] = self.speed_limit_controller.speed_limit_offseted
-
-    if self.turn_speed_controller.is_active:
-      a_solutions['turnlimit'] = self.turn_speed_controller.a_target
-      v_solutions['turnlimit'] = self.turn_speed_controller.speed_limit
 
     source = min(v_solutions, key=v_solutions.get)
 

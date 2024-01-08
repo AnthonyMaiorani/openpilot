@@ -19,15 +19,12 @@ from openpilot.selfdrive.manager.helpers import unblock_stdout, write_onroad_par
 from openpilot.selfdrive.manager.process import ensure_running
 from openpilot.selfdrive.manager.process_config import managed_processes
 from openpilot.selfdrive.athena.registration import register, UNREGISTERED_DONGLE_ID, is_registered_device
-from openpilot.system.swaglog import cloudlog, add_file_handler
+from openpilot.common.swaglog import cloudlog, add_file_handler
 from openpilot.system.version import is_dirty, get_commit, get_version, get_origin, get_short_branch, \
                            get_normalized_origin, terms_version, training_version, \
                            is_tested_branch, is_release_branch
 
 import json
-# for mapd
-from custom_dep import THIRD_PARTY_DIR
-sys.path.append(THIRD_PARTY_DIR)
 
 def manager_init() -> None:
   # update system time from panda
@@ -40,6 +37,8 @@ def manager_init() -> None:
   params.clear_all(ParamKeyType.CLEAR_ON_MANAGER_START)
   params.clear_all(ParamKeyType.CLEAR_ON_ONROAD_TRANSITION)
   params.clear_all(ParamKeyType.CLEAR_ON_OFFROAD_TRANSITION)
+  if is_release_branch():
+    params.clear_all(ParamKeyType.DEVELOPMENT_ONLY)
 
   default_params: List[Tuple[str, Union[str, bytes]]] = [
     ("CompletedTrainingVersion", "0.2.0"),
@@ -63,10 +62,6 @@ def manager_init() -> None:
     ("dp_toyota_sng", "0"),
     ("dp_toyota_enhanced_bsm", "0"),
     ("dp_toyota_enhanced_long_tune", "0"),
-    ("dp_mapd", "0"),
-    ("dp_mapd_vision_turn_control", "0"),
-    ("dp_mapd_speed_limit_control", "0"),
-    ("dp_mapd_turn_speed_control", "0"),
     ("dp_fileserv", "0"),
     ("dp_otisserv", "0"),
     ("dp_long_accel_profile", "0"),
@@ -78,12 +73,18 @@ def manager_init() -> None:
     ("dp_long_missing_lead_warning", "0"),
     ("dp_lateral_road_edge_detection", "1"),
     ("dp_nav_voice_guidance", "0"),
-    ("dp_long_frogai_aggre_accel_tune", "0"),
+    ("dp_long_use_krkeegen_tune", "0"),
     ("dp_toyota_zss", "0"),
     ("dp_long_accel_btn", "0"),
     ("dp_long_personality_btn", "0"),
     ("dp_disable_onroad_uploads", "1"),
     ("dp_long_frogai_smooth_braking_tune", "0"),
+    ("dp_lat_lane_change_assist_speed", "32"),
+    ("dp_device_display_flight_panel", "0"),
+    ("dp_mapd_vision_turn_control", "0"),
+    ("dp_lat_lane_priority_mode", "0"),
+    ("dp_lat_lane_priority_mode_speed_based", "0"),
+    ("dp_nav_full_screen", "0"),
   ]
   if not PC:
     default_params.append(("LastUpdateTime", datetime.datetime.utcnow().isoformat().encode('utf8')))
@@ -178,9 +179,6 @@ def manager_thread() -> None:
   ignore += [x for x in os.getenv("BLOCK", "").split(",") if len(x) > 0]
 
   # dp
-  if not params.get_bool("dp_mapd"):
-    ignore += ["mapd"]
-
   if not params.get_bool("dp_fileserv"):
     ignore += ["fileserv"]
 
@@ -228,7 +226,7 @@ def manager_thread() -> None:
     cloudlog.debug(running)
 
     # send managerState
-    msg = messaging.new_message('managerState')
+    msg = messaging.new_message('managerState', valid=True)
     msg.managerState.processes = [p.get_process_state_msg() for p in managed_processes.values()]
     pm.send('managerState', msg)
 

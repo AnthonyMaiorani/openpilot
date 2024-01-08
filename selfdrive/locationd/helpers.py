@@ -1,6 +1,8 @@
 import numpy as np
 from typing import List, Optional, Tuple, Any
 
+from cereal import log
+
 
 class NPQueue:
   def __init__(self, maxlen: int, rowsize: int) -> None:
@@ -48,3 +50,15 @@ class PointBuckets:
   def load_points(self, points: List[List[float]]) -> None:
     for point in points:
       self.add_point(*point)
+
+
+class ParameterEstimator:
+  """ Base class for parameter estimators """
+  def reset(self) -> None:
+    raise NotImplementedError
+
+  def handle_log(self, t: int, which: str, msg: log.Event) -> None:
+    raise NotImplementedError
+
+  def get_msg(self, valid: bool, with_points: bool) -> log.Event:
+    raise NotImplementedError

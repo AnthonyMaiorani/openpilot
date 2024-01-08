@@ -159,11 +159,11 @@ Reboot required.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Ctrl - Longitudinal</source>
+        <source>Enable Lane Priority Mode</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Enable MapD</source>
+        <source>Ctrl - Longitudinal</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -353,12 +353,6 @@ Your vehicle must support openpilot longitudinal control.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>When enabled, openpilot will display current road name on the screen.
-Author: https://github.com/move-fast/
-Reboot required.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>ECO</source>
         <translation type="unfinished"></translation>
     </message>
@@ -427,12 +421,44 @@ Reboot Required.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Enable Aggressive Acceleration With Lead (SNG Boost)</source>
+        <source>When enabled, openpilot will use lane lines for lateral control, fallback to laneless mode automatically when lane lines probabilities are low.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>When enabled, Accelerate more aggressively behind a lead when starting from a stop.
-Credit to FrogaAi: https://github.com/FrogAi/FrogPilot/</source>
+        <source>Lane Change Assist Activate Speed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Adjust the lane change assist activate speed.
+Off = Disable lane change assistance.
+1 mph = 1.6 kph</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source> kph</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Only When Drive Above</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>All Speed - Use Lane Line when available.
+*Number* - Use Lane Line when available and drive speed is above the *number*.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>All Speed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Enable krkeegan Tune (SNG Boost)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>When enabled, it will apply an offset to get_stopped_equivalence_factor in longitudinal MPC resulting in an early demand for acceleration.
+Activate only when speed belows 27 km/h.
+Credit to krkeegen: https://github.com/krkeegan/</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -461,11 +487,28 @@ Credit to FrogaAi: https://github.com/FrogAi/FrogPilot/</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <source>Display Flight Panel</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>When enabled, openpilot will show information such as pitch angle, altitude, compass on the driving screen.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Disable OnRoad Upload</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <source>When enabled, openpilot will not upload driving log/videos to comma connect when driving. 
+Reboot required.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Display Full Screen Navigation</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>When enabled, openpilot will display navigation in full screen.
 Reboot required.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -652,7 +695,7 @@ Reboot required.</source>
     </message>
 </context>
 <context>
-    <name>DriverViewScene</name>
+    <name>DriverViewWindow</name>
     <message>
         <source>camera starting</source>
         <translation>正在启动相机</translation>
@@ -1194,7 +1237,7 @@ This may take up to a minute.</source>
     </message>
     <message>
         <source>SEARCH</source>
-        <translation>搜索中</translation>
+        <translation type="vanished">搜索中</translation>
     </message>
     <message>
         <source>--</source>

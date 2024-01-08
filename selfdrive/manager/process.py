@@ -15,7 +15,7 @@ import cereal.messaging as messaging
 import openpilot.selfdrive.sentry as sentry
 from openpilot.common.basedir import BASEDIR
 from openpilot.common.params import Params
-from openpilot.system.swaglog import cloudlog
+from openpilot.common.swaglog import cloudlog
 
 WATCHDOG_FN = "/dev/shm/wd_"
 ENABLE_WATCHDOG = os.getenv("NO_WATCHDOG") is None
@@ -209,12 +209,7 @@ class PythonProcess(ManagerProcess):
 
   def prepare(self) -> None:
     if self.enabled:
-      # do not import mapd if it's not activated
-      if self.module == "selfdrive.mapd.mapd":
-        from custom_dep import MAPD_ACTIVATED
-        if not MAPD_ACTIVATED:
-          return
-      print(f"preimporting {self.module}")
+      cloudlog.info(f"preimporting {self.module}")
       importlib.import_module(self.module)
 
   def start(self) -> None:

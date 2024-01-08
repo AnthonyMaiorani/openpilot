@@ -26,8 +26,9 @@ import cereal.messaging as messaging
 import os
 import datetime
 from openpilot.common.realtime import set_core_affinity, set_realtime_priority
-from openpilot.system.swaglog import cloudlog
+from openpilot.common.swaglog import cloudlog
 from pathlib import Path
+from openpilot.common.params import Params
 
 # customisable values
 GPX_LOG_PATH = '/data/media/0/gpx_logs/'
@@ -64,16 +65,13 @@ class GpxD():
     self.logs.clear()
     self.started_time = datetime.datetime.utcnow().isoformat()
 
-  def log(self, sm):
-    gps = sm['gpsLocationExternal']
-
+  def log(self, gps):
     if gps.speed >= 0.1:
       self.pause = False
 
-    location_not_valid = gps.flags % 2 == 0
     if self.pause:
       pass
-    elif location_not_valid:
+    elif gps.verticalAccuracy <= 3.:
       self.lost_signal_count += 1
     else:
       lat = gps.latitude
@@ -135,14 +133,15 @@ class GpxD():
 def gpxd_thread(sm=None, pm=None):
   set_core_affinity([0, 1, 2, 3])
   set_realtime_priority(1)
+  gps_service = "gpsLocationExternal" if Params().get_bool("UbloxAvailable") else "gpsLocation"
   if sm is None:
-    sm = messaging.SubMaster(['gpsLocationExternal'])
+    sm = messaging.SubMaster([gps_service])
 
   gpxd = GpxD()
 
   while True:
     sm.update(1000)
-    gpxd.log(sm)
+    gpxd.log(sm[gps_service])
     gpxd.write_log()
 
 def main(sm=None, pm=None):
