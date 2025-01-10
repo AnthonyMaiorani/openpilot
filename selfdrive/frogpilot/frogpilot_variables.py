@@ -305,11 +305,11 @@ frogpilot_default_params: list[tuple[str, str | bytes, int]] = [
   ("TrafficJerkSpeedDecrease", "50", 3),
   ("TrafficPersonalityProfile", "1", 2),
   ("TuningInfo", "0", 3),
-  ("TuningLevel", "0", 0),
-  ("TuningLevelConfirmed", "0", 0),
+  ("TuningLevel", "3", 0),
+  ("TuningLevelConfirmed", "1", 0),
   ("TurnAggressiveness", "100", 2),
   ("TurnDesires", "0", 2),
-  ("UnlimitedLength", "1", 2),
+  ("UnlimitedLength", "0", 2),
   ("UnlockDoors", "1", 0),
   ("UseSI", "1", 3),
   ("UseVienna", "0", 2),
@@ -374,7 +374,7 @@ class FrogPilotVariables:
       openpilot_longitudinal = False
       pcm_cruise = False
 
-    tuning_level = params.get_int("TuningLevel") if params.get_bool("TuningLevelConfirmed") else 3
+    tuning_level = 3
 
     default = params_default
     level = self.tuning_levels
@@ -495,7 +495,7 @@ class FrogPilotVariables:
     toggle.traffic_mode_follow = [clip(params.get_float("TrafficFollow"), 0.5, 5) if traffic_profile and tuning_level >= level["TrafficFollow"] else clip(default.get_float("TrafficFollow"), 0.5, 5), toggle.aggressive_follow]
 
     custom_ui = params.get_bool("CustomUI") if tuning_level >= level["CustomUI"] else default.get_bool("CustomUI")
-    toggle.acceleration_path = custom_ui and (params.get_bool("AccelerationPath") if tuning_level >= level["AccelerationPath"] else default.get_bool("AccelerationPath"))
+    toggle.acceleration_path = 0
     toggle.adjacent_paths = custom_ui and (params.get_bool("AdjacentPath") if tuning_level >= level["AdjacentPath"] else default.get_bool("AdjacentPath"))
     toggle.blind_spot_path = has_bsm and custom_ui and (params.get_bool("BlindSpotPath") if tuning_level >= level["BlindSpotPath"] else default.get_bool("BlindSpotPath"))
     toggle.compass = custom_ui and (params.get_bool("Compass") if tuning_level >= level["Compass"] else default.get_bool("Compass"))

@@ -431,13 +431,13 @@ class CarInterfaceBase(ABC):
                            enable_buttons=(ButtonType.accelCruise, ButtonType.decelCruise)):
     events = Events()
 
-    if cs_out.doorOpen:
-      events.add(EventName.doorOpen)
-    if cs_out.seatbeltUnlatched:
-      events.add(EventName.seatbeltNotLatched)
-    if cs_out.gearShifter != GearShifter.drive and (extra_gears is None or
-       cs_out.gearShifter not in extra_gears):
-      events.add(EventName.wrongGear)
+    #if cs_out.doorOpen:
+    #  events.add(EventName.doorOpen)
+    #if cs_out.seatbeltUnlatched:
+    #  events.add(EventName.seatbeltNotLatched)
+    #if cs_out.gearShifter != GearShifter.drive and (extra_gears is None or
+    #   cs_out.gearShifter not in extra_gears):
+    #  events.add(EventName.wrongGear)
     if cs_out.gearShifter == GearShifter.reverse:
       events.add(EventName.reverseGear)
     if not cs_out.cruiseState.available:
@@ -460,8 +460,8 @@ class CarInterfaceBase(ABC):
       events.add(EventName.accFaulted)
     if cs_out.steeringPressed:
       events.add(EventName.steerOverride)
-    if cs_out.brakePressed and cs_out.standstill:
-      events.add(EventName.preEnableStandstill)
+    #if cs_out.brakePressed and cs_out.standstill:
+    #  events.add(EventName.preEnableStandstill)
     if cs_out.gasPressed:
       events.add(EventName.gasPressedOverride)
 
