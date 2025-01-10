@@ -50,7 +50,7 @@ def update_frogpilot_toggles():
   params_memory.put_bool("FrogPilotTogglesUpdated", True)
 
 frogpilot_default_params: list[tuple[str, str | bytes, int]] = [
-  ("AccelerationPath", "1", 2),
+  ("AccelerationPath", "0", 2),
   ("AccelerationProfile", "2", 0),
   ("AdjacentLeadsUI", "0", 3),
   ("AdjacentPath", "0", 3),
@@ -223,7 +223,7 @@ frogpilot_default_params: list[tuple[str, str | bytes, int]] = [
   ("QOLLongitudinal", "1", 2),
   ("QOLVisuals", "1", 0),
   ("RadarlessModels", "", 1),
-  ("RainbowPath", "0", 1),
+  ("RainbowPath", "1", 1),
   ("RandomEvents", "0", 1),
   ("RefuseVolume", "101", 2),
   ("RelaxedFollow", "1.75", 2),
