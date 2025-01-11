@@ -339,39 +339,39 @@ class Controls:
           self.events.add(EventName.cameraMalfunction)
         elif not self.sm.all_freq_ok(self.camera_packets):
           self.events.add(EventName.cameraFrameRate)
-    if not REPLAY and self.rk.lagging:
-      self.events.add(EventName.controlsdLagging)
-    if not self.radarless_model:
-      if len(self.sm['radarState'].radarErrors) or ((not self.rk.lagging or REPLAY) and not self.sm.all_checks(['radarState'])):
-        self.events.add(EventName.radarFault)
-    if not self.sm.valid['pandaStates']:
-      self.events.add(EventName.usbError)
-    if CS.canTimeout:
-      self.events.add(EventName.canBusMissing)
-    elif not CS.canValid:
-      self.events.add(EventName.canError)
+    # if not REPLAY and self.rk.lagging:
+    #   self.events.add(EventName.controlsdLagging)
+    # if not self.radarless_model:
+    #   if len(self.sm['radarState'].radarErrors) or ((not self.rk.lagging or REPLAY) and not self.sm.all_checks(['radarState'])):
+    #     self.events.add(EventName.radarFault)
+    # if not self.sm.valid['pandaStates']:
+    #   self.events.add(EventName.usbError)
+    # if CS.canTimeout:
+    #   self.events.add(EventName.canBusMissing)
+    # elif not CS.canValid:
+    #   self.events.add(EventName.canError)
 
-    # generic catch-all. ideally, a more specific event should be added above instead
-    has_disable_events = self.events.contains(ET.NO_ENTRY) and (self.events.contains(ET.SOFT_DISABLE) or self.events.contains(ET.IMMEDIATE_DISABLE))
-    no_system_errors = (not has_disable_events) or (len(self.events) == num_events)
-    if not self.sm.all_checks() and no_system_errors:
-      if not self.sm.all_alive():
-        self.events.add(EventName.commIssue)
-      elif not self.sm.all_freq_ok():
-        self.events.add(EventName.commIssueAvgFreq)
-      else:
-        self.events.add(EventName.commIssue)
+    # # generic catch-all. ideally, a more specific event should be added above instead
+    # has_disable_events = self.events.contains(ET.NO_ENTRY) and (self.events.contains(ET.SOFT_DISABLE) or self.events.contains(ET.IMMEDIATE_DISABLE))
+    # no_system_errors = (not has_disable_events) or (len(self.events) == num_events)
+    # if not self.sm.all_checks() and no_system_errors:
+    #   if not self.sm.all_alive():
+    #     self.events.add(EventName.commIssue)
+    #   elif not self.sm.all_freq_ok():
+    #     self.events.add(EventName.commIssueAvgFreq)
+    #   else:
+    #     self.events.add(EventName.commIssue)
 
-      logs = {
-        'invalid': [s for s, valid in self.sm.valid.items() if not valid],
-        'not_alive': [s for s, alive in self.sm.alive.items() if not alive],
-        'not_freq_ok': [s for s, freq_ok in self.sm.freq_ok.items() if not freq_ok],
-      }
-      if logs != self.logged_comm_issue:
-        cloudlog.event("commIssue", error=True, **logs)
-        self.logged_comm_issue = logs
-    else:
-      self.logged_comm_issue = None
+    #   logs = {
+    #     'invalid': [s for s, valid in self.sm.valid.items() if not valid],
+    #     'not_alive': [s for s, alive in self.sm.alive.items() if not alive],
+    #     'not_freq_ok': [s for s, freq_ok in self.sm.freq_ok.items() if not freq_ok],
+    #   }
+    #   if logs != self.logged_comm_issue:
+    #     cloudlog.event("commIssue", error=True, **logs)
+    #     self.logged_comm_issue = logs
+    # else:
+    #   self.logged_comm_issue = None
 
     if not (self.CP.notCar and self.joystick_mode):
       if not self.sm['liveLocationKalman'].posenetOK:
